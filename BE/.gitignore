@@ -1,0 +1,19 @@
+# compiled output & generated
+/dist
+/node_modules
+/src/common/generated
+
+# OS
+.DS_Store
+
+# Tests
+/coverage
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+.env

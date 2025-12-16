@@ -1,0 +1,50 @@
+services:
+  awr-pg:
+    image: postgres:14.17-alpine
+    container_name: awr-be-project-pg
+    restart: always
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=awr
+    ports:
+      - 5432:5432
+    networks:
+      - awr-network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U user -d awr']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  awr-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: awr-be-project-app
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://user:password@awr-pg:5432/awr?schema=public
+      - NODE_ENV=production
+      - PORT=3000
+    ports:
+      - 3000:3000
+    networks:
+      - awr-network
+    depends_on:
+      awr-pg:
+        condition: service_healthy
+    command: sh -c "npx prisma migrate deploy && node dist/src/main"
+
+networks:
+  awr-network:
+    name: awr-network
+    driver: bridge
+
+volumes:
+  postgres-data:
