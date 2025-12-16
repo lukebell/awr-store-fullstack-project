@@ -441,7 +441,7 @@ t3      Update stock: 2 units   Update stock: 2 units
 Result: 16 units sold, but only 10 were available!
 ```
 
-### Our Solution: Database Transactions with Atomic Operations
+### Solution: Database Transactions with Atomic Operations
 
 We implement a **transactional approach** using Prisma's transaction API combined with **atomic decrement operations** to ensure data consistency even under high concurrency.
 
